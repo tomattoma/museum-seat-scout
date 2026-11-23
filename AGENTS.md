@@ -29,8 +29,34 @@ use the editor.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
 
-## Project rules
+## Purpose & Architecture
 
-- Booking rules (ticket limits, seat math, validation, filters) live as pure functions in `src/lib/museum/booking.ts` with tests beside them; UI only calls them. Why: one tested source of truth for seat availability.
-- Bookings are client-side state (`src/lib/museum/store.tsx`, React context + reducer) persisted to the visitor's browser storage; museum seed data is static in `src/lib/museum/catalog.ts`. Why: the user chose a browser-only demo with no backend or accounts.
-- Render-visible time ("now", today's date list) is read only after hydration via `useNow()`. Why: avoids server/browser markup mismatch.
+- **Purpose:** `MuseumPass` (`museum-seat-scout`) is a browser-persisted museum catalog and visit-slot booking web application built with React, TypeScript, TanStack Start/Router, and Vite, with no real user accounts, secrets, or paid external services.
+- **Architecture:**
+  - Booking rules (ticket limits, seat math, validation, filters) live as pure functions in `src/lib/museum/booking.ts` with tests beside them; UI only calls them. Why: one tested source of truth for seat availability.
+  - Bookings are client-side state (`src/lib/museum/store.tsx`, React context + reducer) persisted to the visitor's browser storage; museum seed data is static in `src/lib/museum/catalog.ts`. Why: the user chose a browser-only demo with no backend or accounts.
+  - Render-visible time ("now", today's date list) is read only after hydration via `useNow()`. Why: avoids server/browser markup mismatch.
+  - Routes, components, and tests live under `src/routes/`, `src/components/`, and `src/test/`.
+
+## Setup & Safe Commands
+
+- **Setup:** Install dependencies in the repository root with `npm install`.
+- **Safe verification commands:**
+  - Run tests: `npm test` (`vitest run`)
+  - Type check: `npx tsc --noEmit`
+  - Production build: `npm run build` (`vite build`)
+- **Lint & formatting caution:** `npm run lint` (`eslint .`) currently reports baseline formatting/lint issues; do not run `npm run format` (`prettier --write .`) or bulk lint auto-fixes across the repository without explicit approval and review.
+
+## Coding Conventions & Test Expectations
+
+- Keep changes scoped to the requested task; do not touch unrelated files or generated artifacts unless required.
+- Preserve existing acceptance criteria (catalog browsing/filtering, booking validation, overbooking prevention, and booking retrieval/cancellation with seat restoration).
+- Run `npm test` and `npx tsc --noEmit` (and `npm run build` when appropriate) after code changes and verify no regressions were introduced.
+- If an external/web assistant does not automatically load `AGENTS.md` from disk, explicitly state and enforce these rules during the session.
+
+## Forbidden Actions
+
+- **No secrets or real PII:** Never commit, print, or hardcode API keys, tokens, credentials, `.env` secrets, or real personal data.
+- **No production deployments:** Never run production deploy commands (such as `npx nitro deploy` or platform deploys) or modify deployment targets without explicit permission.
+- **No destructive commands:** Never delete files/directories, drop data, reset uncommitted local changes (`git reset --hard`, `git checkout -- .`), force-push, or rewrite published git history.
+- **No unapproved dependency changes:** Never add, remove, or upgrade packages in `package.json` or lockfiles without explicit approval.
