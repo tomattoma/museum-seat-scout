@@ -28,3 +28,9 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- Booking rules (ticket limits, seat math, validation, filters) live as pure functions in `src/lib/museum/booking.ts` with tests beside them; UI only calls them. Why: one tested source of truth for seat availability.
+- Bookings are client-side state (`src/lib/museum/store.tsx`, React context + reducer) persisted to the visitor's browser storage; museum seed data is static in `src/lib/museum/catalog.ts`. Why: the user chose a browser-only demo with no backend or accounts.
+- Render-visible time ("now", today's date list) is read only after hydration via `useNow()`. Why: avoids server/browser markup mismatch.
